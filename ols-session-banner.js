@@ -54,7 +54,8 @@
   function renderBanner(session) {
     var style = document.createElement('style');
     style.textContent = [
-      '.ols-session-banner { position: sticky; top: 0; z-index: 9999; display: flex;',
+      '.ols-session-banner { position: fixed; top: 0; left: 0; right: 0; width: 100%;',
+      '  margin: 0; box-sizing: border-box; z-index: 9999; display: flex;',
       '  align-items: center; gap: 10px; padding: 6px 12px; background: #f0f0f0;',
       '  border-bottom: 1px solid #ddd; font-family: ui-monospace, monospace;',
       '  font-size: 0.75rem; color: #444; flex-wrap: wrap; }',
@@ -117,6 +118,20 @@
     bar.appendChild(clearBtn);
 
     document.body.insertBefore(bar, document.body.firstChild);
+
+    // Banner is fixed (removed from normal flow) so it doesn't inherit each
+    // page's own body margin/max-width - push page content down by its
+    // rendered height instead, on top of whatever spacing the page already had.
+    function reserveSpace() {
+      var basePadding = parseFloat(getComputedStyle(document.body).paddingTop) || 0;
+      if (!document.body.dataset.olsBasePadding) {
+        document.body.dataset.olsBasePadding = String(basePadding);
+      }
+      var base = parseFloat(document.body.dataset.olsBasePadding);
+      document.body.style.paddingTop = (base + bar.offsetHeight) + 'px';
+    }
+    reserveSpace();
+    window.addEventListener('resize', reserveSpace);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
