@@ -1,8 +1,11 @@
 (function () {
   // Governance-reviewable setting: how long a shared session stays valid.
   // Refreshed on every page load (rolling window), so an active visitor's
-  // session naturally extends; an inactive one expires after this many days.
-  var SESSION_EXPIRY_DAYS = 30;
+  // session naturally extends; an inactive one expires after this many minutes.
+  // Reduced from 30 days to 30 minutes for testing (2026-09-11) - matches the
+  // account-global /ourlovelysystem/session/lifetime-minutes SSM parameter
+  // used server-side for DynamoDB session TTL; not auto-synced, keep in step manually.
+  var SESSION_EXPIRY_MINUTES = 30;
 
   var COOKIE_NAME = 'ols_session';
   var COOKIE_DOMAIN = '.ourlovelysystem.org';
@@ -44,7 +47,7 @@
     if (!session) {
       session = { session_id: crypto.randomUUID(), display_name: '' };
     }
-    writeSession(session, SESSION_EXPIRY_DAYS * 24 * 60 * 60);
+    writeSession(session, SESSION_EXPIRY_MINUTES * 60);
     return session;
   }
 
@@ -84,7 +87,7 @@
     nameInput.value = session.display_name || '';
     nameInput.addEventListener('change', function () {
       session.display_name = nameInput.value.trim();
-      writeSession(session, SESSION_EXPIRY_DAYS * 24 * 60 * 60);
+      writeSession(session, SESSION_EXPIRY_MINUTES * 60);
     });
     bar.appendChild(nameInput);
 
