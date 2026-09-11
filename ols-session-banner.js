@@ -71,8 +71,7 @@
     bar.className = 'ols-session-banner';
 
     var idLabel = document.createElement('span');
-    idLabel.textContent = 'session: ' + session.session_id.slice(0, 8);
-    idLabel.title = session.session_id;
+    idLabel.textContent = 'session: ' + session.session_id;
     bar.appendChild(idLabel);
 
     var sep1 = document.createElement('span');
@@ -85,11 +84,23 @@
     nameInput.placeholder = 'name (optional)';
     nameInput.maxLength = 200;
     nameInput.value = session.display_name || '';
-    nameInput.addEventListener('change', function () {
+    bar.appendChild(nameInput);
+
+    var saveBtn = document.createElement('button');
+    saveBtn.type = 'button';
+    saveBtn.textContent = 'Update name';
+    function saveName() {
       session.display_name = nameInput.value.trim();
       writeSession(session, SESSION_EXPIRY_MINUTES * 60);
+      var original = saveBtn.textContent;
+      saveBtn.textContent = 'Saved';
+      setTimeout(function () { saveBtn.textContent = original; }, 1000);
+    }
+    saveBtn.addEventListener('click', saveName);
+    nameInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') saveName();
     });
-    bar.appendChild(nameInput);
+    bar.appendChild(saveBtn);
 
     var sep2 = document.createElement('span');
     sep2.className = 'ols-sep';
