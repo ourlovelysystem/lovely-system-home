@@ -61,9 +61,9 @@
       '  font-size: 0.75rem; color: #444; flex-wrap: wrap; }',
       '.ols-session-banner .ols-sep { color: #bbb; }',
       '.ols-session-banner input { font: inherit; padding: 2px 6px; border: 1px solid #ccc;',
-      '  border-radius: 4px; width: 160px; }',
+      '  border-radius: 4px; width: 160px; background: #fff; color: #111; }',
       '.ols-session-banner button { font: inherit; padding: 2px 8px; border: 1px solid #ccc;',
-      '  border-radius: 4px; background: #fff; cursor: pointer; }',
+      '  border-radius: 4px; background: #fff; color: #111; cursor: pointer; }',
       '.ols-session-banner button:hover { background: #e8e8e8; }'
     ].join('\n');
     document.head.appendChild(style);
